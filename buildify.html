@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buildify — Landing Pages за Бизнеси</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#02020a;
+  --bg2:#06060f;
+  --bg3:#0a0a18;
+  --accent:#7c6fff;
+  --accent2:#b8a9ff;
+  --accent3:#ff6b9d;
+  --text:#ebebff;
+  --text2:#6a6a99;
+  --text3:#2e2e52;
+  --border:rgba(124,111,255,0.1);
+  --card:#060614;
+  --font-d:'Space Grotesk',sans-serif;
+  --font-b:'Inter',sans-serif;
+  --r:12px;--rl:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;line-height:1.7;overflow-x:hidden}
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.cursor-glow{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,111,255,0.045) 0%,transparent 70%);pointer-events:none;z-index:1;transform:translate(-50%,-50%);transition:opacity 0.3s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(2,2,10,0.75);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:0.5px solid var(--border)}
+.nav-left{display:flex;align-items:center;gap:2.5rem}
+.nav-logo{font-family:var(--font-d);font-size:1.2rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:9px}
+.logo-mark{width:26px;height:26px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:white;flex-shrink:0;animation:logoPulse 3s ease infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 0 rgba(124,111,255,0.3)}50%{box-shadow:0 0 0 6px rgba(124,111,255,0)}}
+.nav-pill{background:rgba(124,111,255,0.06);border:0.5px solid rgba(124,111,255,0.15);border-radius:100px;padding:0.25rem 0.75rem;font-size:0.7rem;font-weight:500;color:var(--text2);display:flex;align-items:center;gap:6px}
+.nav-pill-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav-links{display:flex;gap:1.75rem;list-style:none;align-items:center}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.85rem;font-weight:500;transition:color 0.2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 0.25s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{background:linear-gradient(135deg,var(--accent),#9d6fff)!important;color:white!important;padding:0.45rem 1.1rem;border-radius:8px;font-size:0.82rem!important;font-weight:600!important;box-shadow:0 0 20px rgba(124,111,255,0.2);transition:box-shadow 0.2s,transform 0.2s!important}
+.nav-cta::after{display:none!important}
+.nav-cta:hover{box-shadow:0 0 30px rgba(124,111,255,0.35)!important;transform:translateY(-1px)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--text2);border-radius:2px;transition:all 0.3s}
+
+section{position:relative;z-index:2}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 2rem 5rem;max-width:1200px;margin:0 auto;position:relative}
+.hero-inner{max-width:760px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,111,255,0.06);border:0.5px solid rgba(124,111,255,0.2);border-radius:100px;padding:0.35rem 0.9rem;font-size:0.75rem;font-weight:500;color:var(--accent2);margin-bottom:2rem;animation:fadeUp 0.7s ease both}
+.badge-dot{width:6px;height:6px;background:#34d399;border-radius:50%;animation:pulse 2s ease infinite}
+.hero h1{font-family:var(--font-d);font-size:clamp(3.2rem,8vw,6.5rem);font-weight:700;line-height:1.02;letter-spacing:-0.04em;margin-bottom:1.5rem;animation:fadeUp 0.7s 0.1s ease both}
+.hero h1 .line{display:block}
+.gradient-text{background:linear-gradient(125deg,var(--accent) 0%,var(--accent2) 40%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:gradShift 5s ease infinite}
+@keyframes gradShift{0%,100%{background-position:0%}50%{background-position:100%}}
+.hero-desc{font-size:1.05rem;color:var(--text2);max-width:520px;margin-bottom:2.5rem;animation:fadeUp 0.7s 0.2s ease both;line-height:1.75}
+.hero-actions{display:flex;gap:0.875rem;flex-wrap:wrap;animation:fadeUp 0.7s 0.3s ease both}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),#9d6fff);color:white;padding:0.875rem 1.875rem;border-radius:var(--r);font-weight:600;font-size:0.92rem;text-decoration:none;transition:transform 0.25s,box-shadow 0.25s;box-shadow:0 0 30px rgba(124,111,255,0.2)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(124,111,255,0.35)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);color:var(--text);padding:0.875rem 1.875rem;border-radius:var(--r);font-weight:500;font-size:0.92rem;text-decoration:none;border:0.5px solid rgba(255,255,255,0.08);transition:border-color 0.2s,background 0.2s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.18);background:rgba(255,255,255,0.04)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:0.5px solid var(--border);animation:fadeUp 0.7s 0.4s ease both;flex-wrap:wrap}
+.stat-num{font-family:var(--font-d);font-size:2rem;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--text),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:0.78rem;color:var(--text3);margin-top:4px;letter-spacing:0.02em}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* FLOAT CARDS */
+.hero-float{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0.875rem}
+.fc{background:rgba(6,6,20,0.85);border:0.5px solid rgba(124,111,255,0.15);border-radius:var(--r);padding:0.875rem 1.125rem;backdrop-filter:blur(16px);display:flex;align-items:center;gap:11px;font-size:0.8rem;white-space:nowrap}
+.fc:nth-child(1){animation:fcFloat 4s ease-in-out infinite}
+.fc:nth-child(2){animation:fcFloat 4s ease-in-out infinite;animation-delay:-1.5s}
+.fc:nth-child(3){animation:fcFloat 4s ease-in-out infinite;animation-delay:-3s}
+@keyframes fcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.fc-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
+.fci-g{background:rgba(52,211,153,0.12);color:#34d399}
+.fci-p{background:rgba(124,111,255,0.12);color:var(--accent2)}
+.fci-r{background:rgba(255,107,157,0.12);color:var(--accent3)}
+.fc-txt{color:var(--text2);line-height:1.35}
+.fc-txt strong{display:block;color:var(--text);font-weight:500;font-size:0.82rem}
+
+/* MARQUEE */
+.marquee-wrap{padding:1.25rem 0;overflow:hidden;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);background:rgba(124,111,255,0.015);position:relative;z-index:2}
+.marquee-track{display:flex;gap:2.5rem;animation:marquee 28s linear infinite;white-space:nowrap}
+.mi{display:inline-flex;align-items:center;gap:8px;font-size:0.78rem;font-weight:500;color:var(--text3);flex-shrink:0;letter-spacing:0.03em}
+.mi::before{content:'◆';color:rgba(124,111,255,0.4);font-size:0.5rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SERVICES */
+.services{padding:8rem 2rem;max-width:1200px;margin:0 auto}
+.eyebrow{font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(124,111,255,0.7);margin-bottom:0.75rem}
+.sec-title{font-family:var(--font-d);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:0.875rem;line-height:1.1}
+.sec-sub{color:var(--text2);max-width:480px;margin-bottom:3.5rem;font-size:0.92rem}
+
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--rl);overflow:hidden;border:0.5px solid var(--border)}
+.svc{background:var(--bg2);padding:2rem;transition:background 0.3s;cursor:default;position:relative;overflow:hidden}
+.svc::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(124,111,255,0.05),transparent 55%);opacity:0;transition:opacity 0.3s}
+.svc:hover{background:#080818}
+.svc:hover::after{opacity:1}
+.svc-ico{font-size:1.5rem;margin-bottom:1rem;position:relative;z-index:1}
+.svc h3{font-family:var(--font-d);font-size:0.95rem;font-weight:600;margin-bottom:0.5rem;position:relative;z-index:1}
+.svc p{font-size:0.83rem;color:var(--text2);line-height:1.65;position:relative;z-index:1}
+
+/* PORTFOLIO */
+.portfolio{padding:8rem 2rem;max-width:1200px;margin:0 auto}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.pcard{border-radius:var(--rl);overflow:hidden;border:0.5px solid var(--border);background:var(--card);transition:transform 0.4s cubic-bezier(.23,1,.32,1),border-color 0.3s,box-shadow 0.4s;text-decoration:none;display:block;color:var(--text)}
+.pcard:hover{transform:translateY(-8px);border-color:rgba(124,111,255,0.3);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.ppreview{height:195px;position:relative;overflow:hidden;background:#050510}
+.ppreview img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 0.5s ease;display:block}
+.pcard:hover .ppreview img{transform:scale(1.04)}
+.poverlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(6,6,20,0.95) 100%);pointer-events:none}
+.pinfo{padding:1.375rem 1.5rem}
+.ptag{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.35rem}
+.pinfo h3{font-family:var(--font-d);font-size:0.95rem;font-weight:600;margin-bottom:0.3rem}
+.pinfo p{font-size:0.8rem;color:var(--text2);line-height:1.55}
+.parrow{display:inline-flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:500;color:rgba(124,111,255,0.6);margin-top:0.75rem;transition:color 0.2s,gap 0.2s}
+.pcard:hover .parrow{color:var(--accent2);gap:10px}
+
+/* TYPING */
+.typing-sec{padding:4rem 2rem;max-width:1200px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.typing-wrap{font-family:var(--font-d);font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:700;letter-spacing:-0.02em;line-height:1.3}
+.typing-prefix{color:var(--text3)}
+.typing-word{color:var(--accent2)}
+.tcursor{display:inline-block;width:2.5px;height:0.85em;background:var(--accent);margin-left:3px;vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* PROCESS */
+.process{padding:8rem 2rem;max-width:1200px;margin:0 auto}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:4rem;position:relative}
+.proc-grid::before{content:'';position:absolute;top:22px;left:5%;right:5%;height:0.5px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),var(--accent3),transparent);opacity:0.15}
+.pstep{}
+.pdot{width:10px;height:10px;border-radius:50%;margin-bottom:1.75rem}
+.pdot1{background:var(--accent);box-shadow:0 0 12px rgba(124,111,255,0.5)}
+.pdot2{background:var(--accent2);box-shadow:0 0 12px rgba(184,169,255,0.5)}
+.pdot3{background:var(--accent3);box-shadow:0 0 12px rgba(255,107,157,0.5)}
+.pdot4{background:#34d399;box-shadow:0 0 12px rgba(52,211,153,0.5)}
+.pnum{font-family:var(--font-d);font-size:2.5rem;font-weight:700;color:rgba(124,111,255,0.06);line-height:1;margin-bottom:0.5rem}
+.ptitle{font-family:var(--font-d);font-size:0.9rem;font-weight:600;margin-bottom:0.35rem}
+.pdesc{font-size:0.82rem;color:var(--text2);line-height:1.65}
+
+/* CTA */
+.cta-sec{padding:8rem 2rem;max-width:1200px;margin:0 auto}
+.cta-box{border:0.5px solid rgba(124,111,255,0.15);border-radius:24px;padding:5rem 3rem;text-align:center;position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(124,111,255,0.05) 0%,rgba(255,107,157,0.03) 100%)}
+.cta-orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;animation:orbf 7s ease-in-out infinite}
+.o1{width:350px;height:350px;background:rgba(124,111,255,0.07);top:-80px;left:-80px}
+.o2{width:280px;height:280px;background:rgba(255,107,157,0.05);bottom:-60px;right:-60px;animation-delay:-3.5s}
+@keyframes orbf{0%,100%{transform:scale(1)}50%{transform:scale(1.12) translate(15px,-15px)}}
+.cta-box h2{font-family:var(--font-d);font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;position:relative;z-index:1}
+.cta-box>p{color:var(--text2);max-width:420px;margin:0 auto 2.5rem;font-size:0.95rem;position:relative;z-index:1}
+.cta-btns{display:flex;gap:0.875rem;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
+.cta-info{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;margin-top:2.5rem;padding-top:2rem;border-top:0.5px solid var(--border);position:relative;z-index:1}
+.ci{display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--text2)}
+.ci strong{color:var(--text);font-weight:500}
+.ci-d{width:5px;height:5px;border-radius:50%;background:var(--accent2);flex-shrink:0}
+
+footer{padding:1.75rem 2rem;border-top:0.5px solid var(--border);max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:2}
+footer p{font-size:0.78rem;color:var(--text3)}
+.fl{display:flex;gap:1.5rem}
+.fl a{font-size:0.78rem;color:var(--text3);text-decoration:none;transition:color 0.2s}
+.fl a:hover{color:var(--text2)}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.75s ease,transform 0.75s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.rscale{opacity:0;transform:scale(0.96);transition:opacity 0.7s ease,transform 0.7s ease}
+.rscale.visible{opacity:1;transform:scale(1)}
+
+@media(max-width:1024px){
+  .hero-float{display:none}
+  .services-grid,.portfolio-grid{grid-template-columns:1fr 1fr}
+  .proc-grid{grid-template-columns:1fr 1fr;gap:2rem 3rem}
+  .proc-grid::before{display:none}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .nav-left{gap:1rem}
+  .nav-pill{display:none}
+  .nav-links.open{display:flex;flex-direction:column;position:fixed;top:64px;left:0;right:0;background:rgba(2,2,10,0.97);backdrop-filter:blur(24px);padding:2rem;gap:1.5rem;border-bottom:0.5px solid var(--border);z-index:99}
+  .nav-links.open a{font-size:1rem}
+  .hero{padding:7rem 1.25rem 3rem}
+  .hero-stats{gap:1.75rem}
+  .services,.portfolio,.process,.cta-sec,.typing-sec{padding:4.5rem 1.25rem}
+  .services-grid,.portfolio-grid{grid-template-columns:1fr;background:none;border:0.5px solid var(--border)}
+  .svc{border-bottom:0.5px solid var(--border)}
+  .proc-grid{grid-template-columns:1fr 1fr}
+  .cta-box{padding:2.5rem 1.5rem}
+  footer{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .proc-grid{grid-template-columns:1fr}
+  .portfolio-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav>
+  <div class="nav-left">
+    <a href="#" class="nav-logo">
+      <div class="logo-mark">B</div>
+      Buildify
+    </a>
+    <div class="nav-pill">
+      <span class="nav-pill-dot"></span>
+      Приема нови клиенти
+    </div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#portfolio">Портфолио</a></li>
+    <li><a href="#process">Процес</a></li>
+    <li><a href="#contact" class="nav-cta">Свържи се ↗</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="badge-dot"></span>Landing pages за малки бизнеси — Пловдив</div>
+      <h1>
+        <span class="line">Сайт, който</span>
+        <span class="line gradient-text">работи за теб.</span>
+      </h1>
+      <p class="hero-desc">Изграждам бързи и модерни landing pages за малки бизнеси в България. От идея до готов сайт с домейн — за 4–5 дни, на достъпна цена.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Започни проект ↗</a>
+        <a href="#portfolio" class="btn-secondary">Виж примери →</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num" id="s1">100%</div><div class="stat-label">Доволни клиенти</div></div>
+        <div><div class="stat-num">4–5 дни</div><div class="stat-label">Срок за изработка</div></div>
+        <div><div class="stat-num" id="s3">3+</div><div class="stat-label">Завършени проекта</div></div>
+      </div>
+    </div>
+    <div class="hero-float">
+      <div class="fc"><div class="fc-icon fci-g">✓</div><div class="fc-txt"><strong>Сайт публикуван</strong>example-biznes.bg</div></div>
+      <div class="fc"><div class="fc-icon fci-p">⚡</div><div class="fc-txt"><strong>100 / 100</strong>Performance score</div></div>
+      <div class="fc"><div class="fc-icon fci-r">📱</div><div class="fc-txt"><strong>Mobile ready</strong>Перфектно на телефон</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="mi">Landing Pages</span><span class="mi">Мобилна оптимизация</span><span class="mi">Бърза доставка</span><span class="mi">Домейн и хостинг</span><span class="mi">Модерен дизайн</span><span class="mi">Техническа поддръжка</span><span class="mi">4–5 дни изработка</span><span class="mi">Пловдив, България</span>
+    <span class="mi">Landing Pages</span><span class="mi">Мобилна оптимизация</span><span class="mi">Бърза доставка</span><span class="mi">Домейн и хостинг</span><span class="mi">Модерен дизайн</span><span class="mi">Техническа поддръжка</span><span class="mi">4–5 дни изработка</span><span class="mi">Пловдив, България</span>
+  </div>
+</div>
+
+<section id="services">
+  <div class="services">
+    <p class="eyebrow reveal">Какво предлагам</p>
+    <h2 class="sec-title reveal">Landing page —<br>всичко включено</h2>
+    <p class="sec-sub reveal">Един фокусиран продукт, изпълнен перфектно. Без излишни разходи, без загуба на време.</p>
+    <div class="services-grid">
+      <div class="svc reveal"><div class="svc-ico">🎯</div><h3>Един страничен сайт</h3><p>Фокусиран landing page, проектиран да привлича клиенти и да конвертира посетители.</p></div>
+      <div class="svc reveal"><div class="svc-ico">📱</div><h3>Mobile-first дизайн</h3><p>Изглежда перфектно на телефон, таблет и компютър. Повечето клиенти гледат от телефон.</p></div>
+      <div class="svc reveal"><div class="svc-ico">⚡</div><h3>Бърз и лек</h3><p>Оптимизиран за бързо зареждане — клиентите не чакат, а Google го обича.</p></div>
+      <div class="svc reveal"><div class="svc-ico">🌐</div><h3>Домейн и хостинг</h3><p>Помагам с избор и настройка на домейн. Хостингът е безплатен или на минимална цена.</p></div>
+      <div class="svc reveal"><div class="svc-ico">✏️</div><h3>Съдържание и текстове</h3><p>Помагам с текстовете ако нямате готови. Сайтът трябва да говори на езика на клиентите ви.</p></div>
+      <div class="svc reveal"><div class="svc-ico">🔧</div><h3>Поддръжка след предаване</h3><p>Малки промени и обновления след публикуването — не ви оставям сами.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="typing-sec">
+  <div class="typing-wrap reveal">
+    <span class="typing-prefix">Правя landing pages за </span><span class="typing-word" id="tword"></span><span class="tcursor"></span>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="portfolio">
+    <p class="eyebrow reveal">Портфолио</p>
+    <h2 class="sec-title reveal">Последни проекти</h2>
+    <p class="sec-sub reveal">Реални landing pages, изградени с внимание към детайла.</p>
+    <div class="portfolio-grid">
+      <a href="https://pavel798.github.io/apex-gym/" target="_blank" class="pcard rscale">
+        <div class="ppreview">
+          <img src="https://api.screenshotone.com/animate?url=https://pavel798.github.io/apex-gym/&viewport_width=1280&viewport_height=800&format=jpg&image_quality=85" 
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" 
+               alt="Apex Gym preview">
+          <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#0a0a1e,#1a0a2e);align-items:center;justify-content:center;flex-direction:column;gap:8px">
+            <div style="font-size:2rem">🏋️</div>
+            <div style="font-size:0.75rem;color:#7070aa">Apex Gym</div>
+          </div>
+          <div class="poverlay"></div>
+        </div>
+        <div class="pinfo">
+          <p class="ptag">Фитнес / Landing Page</p>
+          <h3>Apex Gym</h3>
+          <p>Модерен landing page за фитнес зала с услуги, членство и контакт форма.</p>
+          <span class="parrow">Виж проекта →</span>
+        </div>
+      </a>
+      <a href="https://pavel798.github.io/maison-restaurant/" target="_blank" class="pcard rscale">
+        <div class="ppreview">
+          <img src="https://api.screenshotone.com/animate?url=https://pavel798.github.io/maison-restaurant/&viewport_width=1280&viewport_height=800&format=jpg&image_quality=85"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+               alt="Maison Restaurant preview">
+          <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#1a0a0a,#2a1500);align-items:center;justify-content:center;flex-direction:column;gap:8px">
+            <div style="font-size:2rem">🍽️</div>
+            <div style="font-size:0.75rem;color:#7070aa">Maison Restaurant</div>
+          </div>
+          <div class="poverlay"></div>
+        </div>
+        <div class="pinfo">
+          <p class="ptag">Ресторант / Landing Page</p>
+          <h3>Maison Restaurant</h3>
+          <p>Елегантен ресторантски landing page с меню, резервации и атмосфера.</p>
+          <span class="parrow">Виж проекта →</span>
+        </div>
+      </a>
+      <a href="https://pavel798.github.io/syncflow-saas/" target="_blank" class="pcard rscale">
+        <div class="ppreview">
+          <img src="https://api.screenshotone.com/animate?url=https://pavel798.github.io/syncflow-saas/&viewport_width=1280&viewport_height=800&format=jpg&image_quality=85"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+               alt="SyncFlow preview">
+          <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#020a1a,#0a0a2e);align-items:center;justify-content:center;flex-direction:column;gap:8px">
+            <div style="font-size:2rem">⚡</div>
+            <div style="font-size:0.75rem;color:#7070aa">SyncFlow SaaS</div>
+          </div>
+          <div class="poverlay"></div>
+        </div>
+        <div class="pinfo">
+          <p class="ptag">SaaS / Продуктов сайт</p>
+          <h3>SyncFlow</h3>
+          <p>Продуктов landing page за SaaS платформа с pricing и feature секции.</p>
+          <span class="parrow">Виж проекта →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="process">
+    <p class="eyebrow reveal">Как работим</p>
+    <h2 class="sec-title reveal">От разговор до<br>готов сайт за 4–5 дни</h2>
+    <div class="proc-grid">
+      <div class="pstep reveal"><div class="pdot pdot1"></div><div class="pnum">01</div><div class="ptitle">Разговор</div><p class="pdesc">Обсъждаме какво ви трябва — услуги, дизайн, срок и бюджет. Без ангажимент.</p></div>
+      <div class="pstep reveal"><div class="pdot pdot2"></div><div class="pnum">02</div><div class="ptitle">Дизайн</div><p class="pdesc">Изграждам landing page-а и го адаптирам до вашето пълно одобрение.</p></div>
+      <div class="pstep reveal"><div class="pdot pdot3"></div><div class="pnum">03</div><div class="ptitle">Публикуване</div><p class="pdesc">Сайтът излиза онлайн с вашия домейн — готов да приема клиенти.</p></div>
+      <div class="pstep reveal"><div class="pdot pdot4"></div><div class="pnum">04</div><div class="ptitle">Поддръжка</div><p class="pdesc">Остава ми като партньор за промени и малки обновления.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="cta-sec">
+    <div class="cta-box reveal">
+      <div class="cta-orb o1"></div>
+      <div class="cta-orb o2"></div>
+      <p class="eyebrow" style="text-align:center;position:relative;z-index:1">Свържете се</p>
+      <h2>Готови ли сте за<br><span class="gradient-text">собствен сайт?</span></h2>
+      <p>Пишете ми и ще отговоря в рамките на часове. Без задължения, без скрити такси.</p>
+      <div class="cta-btns">
+        <a href="viber://chat?number=+359" class="btn-primary">Пишете в Viber ↗</a>
+        <a href="mailto:contact@buildify.bg" class="btn-secondary">Изпратете имейл</a>
+      </div>
+      <div class="cta-info">
+        <div class="ci"><div class="ci-d"></div><span>Пловдив, България</span></div>
+        <div class="ci"><div class="ci-d"></div><span>Отговор в <strong>до 2 часа</strong></span></div>
+        <div class="ci"><div class="ci-d"></div><span>Работи <strong>в цяла България</strong></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Buildify. Всички права запазени.</p>
+  <div class="fl">
+    <a href="#services">Услуги</a>
+    <a href="#portfolio">Портфолио</a>
+    <a href="#contact">Контакт</a>
+  </div>
+</footer>
+
+<script>
+const canvas=document.getElementById('bgCanvas');
+const ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.r=Math.random()*1.2+.4;this.a=Math.random()*.35+.08;this.c=Math.random()>.65?'124,111,255':Math.random()>.5?'184,169,255':'255,107,157'}
+for(let i=0;i<70;i++)pts.push(new Pt());
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${p.c},${p.a})`;ctx.fill();
+  });
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(124,111,255,${.05*(1-d/130)})`;ctx.lineWidth=.4;ctx.stroke()}
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+
+const glow=document.getElementById('cursorGlow');
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+
+const hbg=document.getElementById('hamburger'),nl=document.getElementById('navLinks');
+hbg.addEventListener('click',()=>nl.classList.toggle('open'));
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
+
+const obs=new IntersectionObserver((entries)=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*85);obs.unobserve(e.target)}})},{threshold:0.1});
+document.querySelectorAll('.reveal,.rscale').forEach(el=>obs.observe(el));
+
+document.querySelectorAll('.svc').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')})});
+
+const words=['автосервизи','козметични салони','зъболекари','ресторанти','фитнес зали','адвокати','строителни фирми','фризьори'];
+let wi=0,ci=0,del=false;
+const tw=document.getElementById('tword');
+function type(){const w=words[wi];if(!del){tw.textContent=w.slice(0,++ci);if(ci===w.length){del=true;setTimeout(type,1900);return}}else{tw.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length}}setTimeout(type,del?45:85)}
+type();
+</script>
+</body>
+</html>
